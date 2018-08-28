@@ -1,5 +1,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    //background when pressed
     <item android:state_pressed="true" >
         <shape>
             <gradient
@@ -10,7 +9,6 @@
         </shape>
 
     </item>
-    //Default background of linear
     <item>
         <shape>
             <gradient
