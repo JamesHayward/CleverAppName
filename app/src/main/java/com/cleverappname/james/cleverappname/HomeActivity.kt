@@ -55,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    /*  Extension to allow individual venues to be clicked and opening a detailed view of that venue
     fun getVenueDetails(inputString: String) {
         doAsync {
             val tempUrl = ("https://api.foursquare.com/v2/venues/"
@@ -65,12 +66,12 @@ class HomeActivity : AppCompatActivity() {
                     + FOURSQUARE_CLIENT_SECRET
                     + "&v=20180827")
             val s: String = URL("$tempUrl").readText()
-            //TODO: handle this data and display it in a pretty way- - - Extension to show detailed view of each venue
             uiThread {
-
+                alert {  }
             }
         }
     }
+    */
 
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -91,12 +92,17 @@ class HomeActivity : AppCompatActivity() {
             holder.venueName?.text = items[position].venue.name
             holder.venueAddress?.text = items[position].venue.location.address
             holder.venueCategory?.text = items[position].venue.categories?.get(0)?.name
+            holder.itemView.setOnClickListener(holder)
         }
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val venueName = view.venue_name
         val venueAddress = view.venue_address
         val venueCategory = view.venue_category
+
+        override fun onClick(v: View?) {
+            //call getVenueDetails(VENUE_ID) and update ui
+        }
     }
 }
