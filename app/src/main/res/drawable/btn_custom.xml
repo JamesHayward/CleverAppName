@@ -1,0 +1,23 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    //background when pressed
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:type="linear"
+                android:startColor="@color/colorPrimary"
+                android:endColor="@color/purpleLight"
+                android:angle="45"/>
+        </shape>
+
+    </item>
+    //Default background of linear
+    <item>
+        <shape>
+            <gradient
+                android:startColor="@color/colorPrimary"
+                android:endColor="@color/colorPrimaryDark"
+                android:angle="270" />
+
+        </shape>
+    </item>
+</selector>

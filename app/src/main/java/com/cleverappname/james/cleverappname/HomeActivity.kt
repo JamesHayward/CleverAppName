@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import com.google.gson.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -18,31 +19,21 @@ class HomeActivity : AppCompatActivity() {
 
     private var FOURSQUARE_CLIENT_ID = "3O5RJUVSQSRYU3JEQNMAG1AM2CONYOAHB3SAMWSRRKUDANMP"
     private var FOURSQUARE_CLIENT_SECRET = "STMPSWLBHCRUACQTNXUR00RMHQIYMUBY14LGI51S3GWTDOOV"
-    private var dataSet: ArrayList<String> = ArrayList()
+    private var dataSet: ArrayList<ItemsItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
-        btnSearchAction.setOnClickListener { downloadData(editTextLocationInput.text.toString()) }
-//        mainContent.setOnClickListener { getVenueDetails("4b7c1a5ef964a520137d2fe3") }
+        btnSearchAction.setOnClickListener {
+            downloadData(editTextLocationInput.text.toString())
+            editTextLocationInput.hideKeyboard()
+        }
         mainContent.layoutManager = LinearLayoutManager(this)
         mainContent.adapter = VenuesAdapter(dataSet, this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_home, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    fun downloadData(inputString: String) {
+    private fun downloadData(inputString: String) {
         doAsync {
             val tempUrl = ("https://api.foursquare.com/v2/venues/explore?client_id="
                     + FOURSQUARE_CLIENT_ID
@@ -51,21 +42,14 @@ class HomeActivity : AppCompatActivity() {
                     + "&v=20180827&near="
                     + inputString)
             val s: String = URL("$tempUrl").readText()
-            //TODO: handle this data and display it in a pretty way
             uiThread {
                 val gson = Gson()
-                val venues = gson.fromJson(s, Foursquarevenues::class.java)
+                val foursquareResults = gson.fromJson(s, Foursquarevenues::class.java)
+                val venues = foursquareResults.response.groups?.get(0)?.items
                 dataSet.clear()
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(0)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(1)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(2)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(3)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(4)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(5)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(6)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(7)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(8)?.venue?.name.toString())
-                dataSet.add(venues.response.groups?.get(0)?.items?.get(9)?.venue?.name.toString())
+                for (items in venues.orEmpty()) {
+                    dataSet.add(items)
+                }
                 mainContent.adapter.notifyDataSetChanged()
             }
         }
@@ -81,14 +65,19 @@ class HomeActivity : AppCompatActivity() {
                     + FOURSQUARE_CLIENT_SECRET
                     + "&v=20180827")
             val s: String = URL("$tempUrl").readText()
-            //TODO: handle this data and display it in a pretty way
+            //TODO: handle this data and display it in a pretty way- - - Extension to show detailed view of each venue
             uiThread {
-                //                mainContent.text = s
+
             }
         }
     }
 
-    class VenuesAdapter(val items: ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    class VenuesAdapter(val items: ArrayList<ItemsItem>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
         override fun getItemCount(): Int {
             return items.size
@@ -99,11 +88,15 @@ class HomeActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.venueName?.text = items[position]
+            holder.venueName?.text = items[position].venue.name
+            holder.venueAddress?.text = items[position].venue.location.address
+            holder.venueCategory?.text = items[position].venue.categories?.get(0)?.name
         }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val venueName = view.venue_name
+        val venueAddress = view.venue_address
+        val venueCategory = view.venue_category
     }
 }

@@ -4,5 +4,8 @@
     <color name="colorPrimaryDark">#6c17ff</color>
     <color name="colorAccent">#eae00a</color>
     <color name="colorTextHeadings">#eae00a</color>
+
     <color name="black">#000000</color>
+
+    <color name="purpleLight">#6b6ef0</color>
 </resources>

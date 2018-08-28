@@ -84,7 +84,15 @@ data class ItemsItem(@SerializedName("venue")
 data class Reasons(@SerializedName("count")
                    val count: Int = 0,
                    @SerializedName("items")
-                   val items: List<ItemsItem>?)
+                   val items: List<ReasonItems>?)
+
+
+data class ReasonItems(@SerializedName("summary")
+                       val summary: String = "",
+                       @SerializedName("type")
+                       val type: String = "",
+                       @SerializedName("reasonName")
+                       val reasonName: String = "")
 
 
 data class GroupsItem(@SerializedName("name")
