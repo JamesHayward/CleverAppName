@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.google.gson.Gson
+import com.google.gson.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 import kotlinx.android.synthetic.main.venue_item.view.*
@@ -53,40 +53,19 @@ class HomeActivity : AppCompatActivity() {
             val s: String = URL("$tempUrl").readText()
             //TODO: handle this data and display it in a pretty way
             uiThread {
-                val json = """
-                    {
-                        "id": "49b6e8d2f964a52016531fe3",
-                        "name": "Russ & Daughters",
-                        "location":
-                            {
-                                "address": "179 E Houston St",
-                                "crossStreet": "btwn Allen & Orchard St",
-                                "lat": 40.72286707707289,
-                                "lng": -73.98829148466851,
-                                "labeledLatLngs": [
-                                    {
-                                        "label": "display",
-                                        "lat": 40.72286707707289,
-                                        "lng": -73.98829148466851
-                                    }
-                                ],
-                                "distance": 130,
-                                "postalCode": "10002",
-                                "cc": "US",
-                                "city": "New York",
-                                "state": "NY",
-                                "country": "United States",
-                                "formattedAddress": [
-                                    "179 E Houston St (btwn Allen & Orchard St)",
-                                    "New York, NY 10002",
-                                    "United States"
-                                ]
-                            }
-                    }
-                """.trimIndent()
                 val gson = Gson()
-                val topic = gson.fromJson(json, Venue::class.java)
-                dataSet.add(topic.name)
+                val venues = gson.fromJson(s, Foursquarevenues::class.java)
+                dataSet.clear()
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(0)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(1)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(2)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(3)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(4)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(5)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(6)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(7)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(8)?.venue?.name.toString())
+                dataSet.add(venues.response.groups?.get(0)?.items?.get(9)?.venue?.name.toString())
                 mainContent.adapter.notifyDataSetChanged()
             }
         }
@@ -127,12 +106,4 @@ class HomeActivity : AppCompatActivity() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val venueName = view.venue_name
     }
-
-    class Venue(
-            val id: String,
-            val name: String,
-            val formattedAddress: String,
-            val lat: String,
-            val lng: String
-    )
 }
