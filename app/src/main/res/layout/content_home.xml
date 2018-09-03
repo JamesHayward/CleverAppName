@@ -23,18 +23,18 @@
             android:id="@+id/editTextLocationInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Enter location here" />
+            android:hint="@string/enter_location_here" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnSearchAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:background="@drawable/btn_custom"
             android:focusable="true"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Search Nearby"
+            android:text="@string/search_nearby"
             android:textColor="@color/colorAccent" />
     </LinearLayout>
 

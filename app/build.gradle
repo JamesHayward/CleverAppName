@@ -5,9 +5,17 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        releaseConfig {
+            keyAlias 'key0'
+            keyPassword 'LOKING2042'
+            storeFile file('/Users/james/keystores/android.jks')
+            storePassword 'LOKAR97od'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.cleverappname.james.cleverappname"
+        applicationId "com.james.cleverappname"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -18,19 +26,25 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+        }
+        debug {
+            //TODO: create proper debug signing that works with the Google api key, using release for convenience...
+            //TODO: ...since the app is not intended to have a proper release it shouldn't matter
+            signingConfig signingConfigs.releaseConfig
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    implementation "org.jetbrains.anko:anko-commons:0.10.4"
+    implementation 'org.jetbrains.anko:anko-commons:0.10.4'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 }
